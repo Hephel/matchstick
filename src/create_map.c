@@ -20,36 +20,27 @@ char **mem_alloc_2d_array(int nb_rows, int nb_cols)
 
 void put_pipes(char **arr, int len)
 {
-    int nb_rows = len + 2;
-    int nb_cols = (1 + 2 * len);
+    int nb_rows = len;
+    int nb_cols = (2 * len - 1);
     int k = 0;
 
     while (k < len) {
-        for (int i = 1 + k; i < nb_cols - 1 - k; i++) {
-            arr[nb_rows - 2 - k][i] = '|';
-        }
+        for (int i = k; i < nb_cols - k; i++)
+            arr[nb_rows - k - 1][i] = '|';
         k++;
     }
 }
 
 char **create_map(int len)
 {
-    int nb_rows = len + 2;
-    int nb_cols = (1 + 2 * len);
+    int nb_rows = len ;
+    int nb_cols = (2 * len - 1);
     char **arr = mem_alloc_2d_array(nb_rows, nb_cols);
 
     for (int j = 0; j < nb_rows; j++) {
         for (int i = 0; i < nb_cols; i++)
             arr[j][i] = ' ';
     }
-    for (int i = 0; i < nb_cols; i++)
-        arr[0][i] = '*';
-    for (int j = 0; j < nb_rows; j++)
-        arr[j][0] = '*';
-    for (int j = 0; j < nb_rows; j++)
-        arr[j][nb_cols - 1] = '*';
-    for (int i = 0; i < nb_cols; i++)
-        arr[nb_rows - 1][i] = '*';
     put_pipes(arr, len);
     return (arr);
 }

@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include "matchstick.h"
 
-char *take_input(char *to_display)
+static char *take_input(char *to_display)
 {
     char *lineptr = NULL;
     size_t n = 0;
@@ -21,56 +21,45 @@ char *take_input(char *to_display)
     }
     return (lineptr);
 }
- 
-int check_pos(int *input, char **arr, int len)
-{
-    int nb_rows = len + 2;
-    int nb_cols = (1 + 2 * len);
-    int nb = 0;
 
-    //my_printf("%d\n", input[0]);
-    //for (int i = 0; arr[input[0]][i] != '\0'; i++) {
-    //    if (arr[input[0]][i] == '|')
-    //        nb++;
-    //}
-    //if (nb != input[1]) {
-    //    my_printf("This line is empty !\n");
-    //    return (1);
-    //}
-    return (0);
-}
-
-int check_input(char *str)
+static int player_input_matches(char **arr, int *input, s_args args)
 {
-    for (int i = 0; str[i] != '\0'; i++) {
-        if ((str[i] < '0' || str[i] > '9') && str[i] != '\n') {
-            return (1);
-        }
+    char *matches;
+    int check = 0;
+
+    matches = take_input("Matches : ");
+    if (matches == NULL)
+        return (-1);
+    if (check_input(matches) == 0)
+        check = 1;
+    if (check == 1)
+        check = check_matches(matches, arr, input, args);
+    if (check == 2) {
+        input[1] = my_getnbr(matches);
+        return (3);
     }
-    return (0);
 }
 
-int input_user(char **arr, int *input, int len)
+int player_input_line(char **arr, int *input, s_args args)
 {
     char *line;
-    char *matches;
+    int check = 0;
 
     my_printf("Your turn :\n");
-    line = take_input("Line : ");
-    if (line == NULL)
-        return (1);
-    while (check_input(line) == 1 || check_pos(input, arr, len) == 1) {
+    while (1) {
         line = take_input("Line : ");
         if (line == NULL)
-            return (0);
+            return (-1);
+        if (check_input(line) == 0)
+            check = 1;
+        if (check == 1)
+            check = check_line(line, arr, args.len);
+        if (check == 2) {
+            input[0] = my_getnbr(line);
+            check = player_input_matches(arr, input, args);
+        }
+        if (check == 3)
+            break;
     }
-    matches = take_input("Matches : ");
-    while (check_input(matches) == 1 || check_pos(input, arr, len) == 1) {
-        matches = take_input("Matches : ");
-        if (line == NULL)
-            return (0);
-    }
-    input[0] = my_getnbr(line);
-    input[1] = my_getnbr(matches);
     return (0);
 }

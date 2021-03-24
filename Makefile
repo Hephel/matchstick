@@ -10,6 +10,9 @@ SRC	=	src/main.c	\
 		src/create_map.c	\
 		src/input.c	\
 		src/change_map.c	\
+		src/check_input.c	\
+		src/rand_ai.c	\
+		src/end.c
 
 OBJ     =       $(SRC:.c=.o)
 
